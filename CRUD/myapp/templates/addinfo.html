@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple CRUD</title>
+  </head>
+  <body>
+    <h1>This is a simple CRUD project without any styling</h1>
+    <h2>Add your information</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+      <label>Name: </label>
+      <input type="text" name="name" required />
+      <label>Email: </label>
+      <input type="email" name="email" required />
+      <button type="submit">Submit</button>
+    </form>
+
+    {% if allInfo %}
+    <h2>All Records</h2>
+    <table border="1" cellpadding="5" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Sr.No</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for info in allInfo %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ info.name }}</td>
+          <td>{{ info.email }}</td>
+          <td><a href="{% url 'update' info.id %}">Update</a></td>
+          <td>
+            <form action="{% url 'delete' info.id %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <input type="submit" value="Delete" onclick="return confirm('Are you sure?');" />
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h2>No Data Found</h2>
+    {% endif %}
+  </body>
+</html>
